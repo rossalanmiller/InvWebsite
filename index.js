@@ -14,7 +14,7 @@ app.get('/api', (request, response) => {
 })
 
 app.get('/api/partReport', db.getReports)
-app.get('/api/partReport/:id', db.getReportById)
+app.get('/api/partReport/:id', db.getReportByOrderId)
 app.post('/api/partReport', db.createReport)
 
 process.on('uncaughtException', (exception) => {
