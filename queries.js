@@ -2,19 +2,35 @@
 
 // use process.env variables to keep private variables,
 require('dotenv').config()
-const orders_table = 'invscanner_db.partreports'
+const orders_table = 'partreports'
 const Pool = require('pg').Pool
 const pg_format = require('pg-format');
 const pool = new Pool({
     user: 'postgres',
     host: 'localhost',
-    database: 'invscanner',
+    database: 'invdb',
     password: 'Saintpaul1!',
     port: 5432
 })
 
+const testConnection = (request, response) => {
+    console.log("TESTING_CONNECTION")
+    var query = `SELECT 't' as t`
+    
+    pool.query(query, (error, results) => {
+        if(error){
+            console.error(error);
+            response.status(500).json(error);
+        }
+        else
+        {
+            console.log(results.rows);
+            response.status(200).json(results.rows);
+        }
+    })
+}
 
-
+/*
 const getReports = (request, response) => {
     console.log(request.url);
     pool.query(`SELECT * FROM ${orders_table}`, (error, results) => {
@@ -91,55 +107,6 @@ const postReport = (request, response) => {
     })
 }
 
-const postReport2 = (request, response) => {
-    console.log("CREATE_REPORT2");
-    console.log(request.body);
-    var items = request.body
-    
-    var values = []
-    var ids = []
-    if(!items.length)
-    {
-        console.log('Assuming one item')
-        items = [request.body]
-    }
-    
-    for(i = 0; i < items.length; i++)
-    {
-        var item = items[i];
-        values.push([
-            item.order_id,
-            item.order_name,
-            item.on_or_off,
-            item.switch_status,
-            item.radio_selection,
-            item.spinner_selection
-        ]);
-        ids.push(item.id);
-    }
-
-    var query = `
-                INSERT INTO ${orders_table} 
-                (order_id, order_name, on_or_off, switch_status, radio_selection, spinner_selection)
-                VALUES
-                %L
-                RETURNING *`;
-
-    const query2 = pg_format(query, values)
-    console.log(query2);
-
-    pool.query(query2, (error, results) => {
-        if(error){
-            console.error(error);
-            response.status(500).json(error);
-        }
-        else
-        {
-            response.status(201).json(ids);
-        }
-    })
-}
-
 const putReport = (request, response) => {
     console.log('PUT_REPORT');
     console.log(request.body);
@@ -185,12 +152,72 @@ const deleteReport = (request, response) => {
         }
     })
 }
+*/
 
+
+const postReportsApp = (request, response) => {
+    console.log("CREATE_REPORT_APP");
+    console.log(request.body);
+    var items = request.body
+    
+    var values = []
+    var ids = []
+    if(!items.length)
+    {
+        console.log('Assuming one item')
+        items = [request.body]
+    }
+    
+    for(i = 0; i < items.length; i++)
+    {
+        var item = items[i];
+        values.push([
+            item.order_id,
+            item.order_name,
+            item.on_or_off,
+            item.switch_status,
+            item.radio_selection,
+            item.spinner_selection,
+            item.user_email
+        ]);
+        ids.push(item.id);
+    }
+
+    var query = `
+                INSERT INTO ${orders_table} 
+                (order_id, order_name, on_or_off, switch_status, radio_selection, spinner_selection, user_email)
+                VALUES
+                %L
+                RETURNING *`;
+
+    const query2 = pg_format(query, values)
+    console.log(query2);
+
+    pool.query(query2, (error, results) => {
+        if(error){
+            console.error(error);
+            response.status(500).json(error);
+        }
+        else
+        {
+            console.log(results.rows);
+            response.status(201).json(ids);
+        }
+    })
+}
+
+module.exports = {
+    postReportsApp,
+    testConnection
+}
+
+/*
 module.exports = {
     getReports,
     getReportByOrderId,
     postReport,
-    postReport2,
+    postReportApp,
     putReport,
     deleteReport
 }
+*/
