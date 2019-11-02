@@ -42,20 +42,25 @@ app.get('/api', (req, res) => {
 // requests for the api
 
 // requests for the gui
-/*
+
 app.get('/', (req, res) => res.send('hello world'))
-app.get('/api/partReport', db.getReports)
+/*app.get('/api/partReport', db.getReports)
 app.post('/api/partReport', db.postReport)
 
 app.put('/api/partReport', db.putReport)
 app.delete('/api/partReport', db.deleteReport)
 */
 
-app.get('/api/test', db.testConnection)
-
+// requests for testing/utilities
+app.get('/api/testDB', db.testConnection)
+app.get('/api/testServer', (req, res) => {
+  res.json({info: 'Connection established'})
+})
 // requests made from the app
 app.post('/api/partReportApp', db.postReportsApp)
 
+// request made from the interface
+app.get('/api/partReportInterface', db.getReports)
 process.on('uncaughtException', (exception) => {
     console.log(exception)
 })

@@ -105,7 +105,7 @@ const postReport = (request, response) => {
             response.status(201).json(results.rows);
         }
     })
-}
+}*/
 
 const putReport = (request, response) => {
     console.log('PUT_REPORT');
@@ -135,6 +135,7 @@ const putReport = (request, response) => {
     })
 }
 
+/*
 const deleteReport = (request, response) => {
     console.log("DELETE_REPORT");
     console.log(request.body);
@@ -206,9 +207,33 @@ const postReportsApp = (request, response) => {
     })
 }
 
+const getReports = (request, response) => {
+    console.log(request.body);
+    const email = request.body.email || '';
+    const date  = request.body.date  || '';
+    
+    params = {
+        "email":email,
+        "date":date
+    }
+
+    pool.query(`SELECT * FROM func_get_partreports_by_email($1)`,[email], (error, results) => {
+        if(error){
+            console.error(error);
+            response.status(500).json(error);
+        }
+        else
+        {
+            response.status(200).json(results.rows);
+        }
+    });
+}
+
+
 module.exports = {
     postReportsApp,
-    testConnection
+    testConnection,
+    getReports
 }
 
 /*
