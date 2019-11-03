@@ -5,3 +5,4 @@ var person = {
 
 const {k1, k2} = person
 console.log(k1)
+console.log(person.k2)

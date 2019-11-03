@@ -1,4 +1,5 @@
 
+const auth = require('basic-auth')
 const express = require('express')
 const bodyPareser = require('body-parser')
 const db = require('./queries')
@@ -39,6 +40,13 @@ app.get('/api', (req, res) => {
     res.json({ info: 'Node.js, Express, and Postgres Api'})
 })
 
+//Basic sandbox request for dev testing
+app.get('/sb', (req, res) =>{
+  const user = auth.parse(req.header('authorization'))
+  console.log(user)
+  res.json('billy')
+})
+
 // requests for the api
 
 // requests for the gui
@@ -54,6 +62,7 @@ app.delete('/api/partReport', db.deleteReport)
 // requests for testing/utilities
 app.get('/api/testDB', db.testConnection)
 app.get('/api/testServer', (req, res) => {
+  console.log(req.headers)
   res.json({info: 'Connection established'})
 })
 // requests made from the app

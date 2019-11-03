@@ -159,6 +159,7 @@ const deleteReport = (request, response) => {
 const postReportsApp = (request, response) => {
     console.log("CREATE_REPORT_APP");
     console.log(request.body);
+    console.log(request.headers);
     var items = request.body
     
     var values = []
@@ -192,7 +193,6 @@ const postReportsApp = (request, response) => {
                 RETURNING *`;
 
     const query2 = pg_format(query, values)
-    console.log(query2);
 
     pool.query(query2, (error, results) => {
         if(error){
@@ -201,7 +201,6 @@ const postReportsApp = (request, response) => {
         }
         else
         {
-            console.log(results.rows);
             response.status(201).json(ids);
         }
     })
@@ -227,6 +226,35 @@ const getReports = (request, response) => {
             response.status(200).json(results.rows);
         }
     });
+}
+
+const validateUser = (request, response) => {
+    /*
+        Retrieves a user from the postgresql server
+        returns a has of the form {'user_email':email, 'user_password':password}
+        if the user does not exist it will return a hash with empty strings for the user and password
+    
+
+    pool.query(`SELECT * FROM users WHERE user_email = '$1'`,[] (error, results) =>
+    {
+        const user = {user_email:'', user_password:''}
+        if(error)
+        {
+            console.error(error);
+            response.status(500).json(error);
+        }
+        else if(results.rowCount == 1)
+        {
+            user_row = results.rows[0]
+            user.user_email = user_row.user_email
+            user.user_password = user_row.user_password
+
+            
+        }
+    });
+
+    return user
+    */
 }
 
 
