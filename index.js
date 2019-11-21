@@ -1,5 +1,5 @@
 
-const auth = require('basic-auth')
+
 const express = require('express')
 const bodyPareser = require('body-parser')
 const db = require('./queries')
@@ -10,6 +10,7 @@ const port = 80
 const helmet = require('helmet') // creates headers that protect from attacks (security)
 const cors = require('cors')  // allows/disallows cross-site communication
 const morgan = require('morgan') // logs requests
+const auth = require('basic-auth')
 
 
 
@@ -41,10 +42,10 @@ app.get('/api', (req, res) => {
 })
 
 //Basic sandbox request for dev testing
-app.get('/sb', (req, res) =>{
-  const user = auth.parse(req.header('authorization'))
-  console.log(user)
-  res.json('billy')
+app.get('/sb', db.validateUser, (req, res) =>{
+  let user = auth.parse(req.header('authorization'))
+  user.name = user.name + " Miller"
+  res.json('Success')
 })
 
 // requests for the api
