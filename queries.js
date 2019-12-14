@@ -236,8 +236,10 @@ const validateUser = (request, response, next) => {
         returns a has of the form {'user_email':email, 'user_password':password}
         if the user does not exist it will return a hash with empty strings for the user and password
     */
-
+    console.log("VALIDATING_USER");
+    
     const user_req = auth.parse(request.header('authorization'));
+    console.log(user_req);
 
     if(!user_req)
     {
