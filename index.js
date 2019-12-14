@@ -52,8 +52,9 @@ app.get('/sb', db.validateUser, (req, res) =>{
 
 // requests for the gui
 
+/*
 app.get('/', (req, res) => res.send('hello world'))
-/*app.get('/api/partReport', db.getReports)
+app.get('/api/partReport', db.getReports)
 app.post('/api/partReport', db.postReport)
 
 app.put('/api/partReport', db.putReport)
@@ -67,10 +68,10 @@ app.get('/api/testServer', (req, res) => {
   res.json({info: 'Connection established'})
 })
 // requests made from the app
-app.post('/api/partReportApp', db.postReportsApp)
+app.post('/api/partReportApp', db.validateUser, db.postReportsApp)
 
 // request made from the interface
-app.get('/api/partReportInterface', db.getReports)
+app.get('/api/partReportInterface', db.validateUser, db.getReports)
 process.on('uncaughtException', (exception) => {
     console.log(exception)
 })

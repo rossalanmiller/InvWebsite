@@ -239,44 +239,50 @@ const validateUser = (request, response, next) => {
 
     const user_req = auth.parse(request.header('authorization'));
 
-    console.log(user_req);
-    pool.query(`SELECT * FROM users WHERE user_email = $1`,[user_req.name], (error, results) =>
+    if(!user_req)
     {
-        const user = {user_email:'', user_password:''}
-        if(error)
+        response.status(401).send('No authoriazation header');
+    }
+    else
+    {
+        pool.query(`SELECT * FROM users WHERE user_email = $1`,[user_req.name], (error, results) =>
         {
-            console.error(error);
-            response.status(500).json(error).send();
-        }
-        else if(results.rowCount == 0)
-        {
-            response.status(401).send('User does not exist in database');
-        }
-        else if(results.rowCount == 1)
-        {
-            user_row = results.rows[0];
-            let user_email = user_row.user_email;
-            let user_password = user_row.user_password;
-            if(user_email != user_req.name)
+            const user = {user_email:'', user_password:''}
+            if(error)
             {
-                response.status(401).send('User does not match');
+                console.error(error);
+                response.status(500).json(error).send();
             }
-            else if(user_password != user_req.pass)
+            else if(results.rowCount == 0)
             {
-                //Request is good send it on
-                response.status(401).send('Invalid password');
+                response.status(401).send('User does not exist in database');
+            }
+            else if(results.rowCount == 1)
+            {
+                user_row = results.rows[0];
+                let user_email = user_row.user_email;
+                let user_password = user_row.user_password;
+                if(user_email != user_req.name)
+                {
+                    response.status(401).send('User does not match');
+                }
+                else if(user_password != user_req.pass)
+                {
+                    //Request is good send it on
+                    response.status(401).send('Invalid password');
+                }
+                else
+                {
+                    next();
+                }
+                console.log(user.user_password);
             }
             else
             {
-                next();
+                response.status(409).send('Multiple users found')
             }
-            console.log(user.user_password);
-        }
-        else
-        {
-            response.status(409).send('Multiple users found')
-        }
-    });
+        });
+    }
 }
 
 
