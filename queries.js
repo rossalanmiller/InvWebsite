@@ -8,10 +8,10 @@ const pg_format = require('pg-format')
 const auth = require('basic-auth')
 
 const pool = new Pool({
-    user: 'postgres',
-    host: 'localhost',
+    user: 'ross',
+    host: '35.227.67.150',
     database: 'invdb',
-    password: 'Saintpaul1!',
+    password: 'Rossalan94!',
     port: 5432
 })
 
